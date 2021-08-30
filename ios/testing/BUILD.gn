@@ -20,6 +20,7 @@ ios_xctest_test("brave_core_ios_tests") {
   deps = [
     "//base",
     "//brave/ios/browser/api/net",
+    "//net",
   ]
 
   frameworks = [
