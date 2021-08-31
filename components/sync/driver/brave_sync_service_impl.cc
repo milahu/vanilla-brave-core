@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "base/logging.h"
+#include "base/metrics/histogram_functions.h"
 #include "base/strings/string_util.h"
 #include "brave/components/brave_sync/crypto/crypto.h"
 #include "brave/components/sync/driver/brave_sync_auth_manager.h"
@@ -98,6 +99,8 @@ void BraveSyncServiceImpl::OnBraveSyncPrefsChanged(const std::string& path) {
       VLOG(1) << "Brave sync seed cleared";
       GetBraveSyncAuthManager()->ResetKeys();
     }
+    int p3a_value = (seed.empty()) ? 0 : 1;
+    base::UmaHistogramExactLinear("Brave.Sync.Enabled", p3a_value, 1);
   }
 }
 
