@@ -106,6 +106,10 @@ class KeyringController : public KeyedService, public mojom::KeyringController {
   void AddImportedAccount(const std::string& account_name,
                           const std::string& private_key,
                           AddImportedAccountCallback callback) override;
+  void AddImportedAccountByJson(const std::string& account_name,
+                                const std::string& password,
+                                const std::string& json,
+                                AddImportedAccountCallback callback) override;
   void GetPrivateKeyForImportedAccount(
       const std::string& address,
       GetPrivateKeyForImportedAccountCallback callback) override;
@@ -167,6 +171,11 @@ class KeyringController : public KeyedService, public mojom::KeyringController {
                            SetDefaultKeyringDerivedAccountName);
 
   void AddAccountForDefaultKeyring(const std::string& account_name);
+
+  // Address will be returned when success
+  std::string AddImportedAccountForDefaultKeyring(
+      const std::string& account_name,
+      const std::vector<uint8_t>& private_key);
 
   size_t GetAccountMetasNumberForKeyring(const std::string& id);
 

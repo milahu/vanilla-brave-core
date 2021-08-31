@@ -12,6 +12,7 @@
 #include "base/strings/string_number_conversions.h"
 #include "brave/components/brave_wallet/browser/brave_wallet_constants.h"
 #include "brave/components/brave_wallet/browser/brave_wallet_utils.h"
+#include "brave/components/brave_wallet/browser/hd_key.h"
 #include "brave/components/brave_wallet/browser/hd_keyring.h"
 #include "brave/components/brave_wallet/browser/pref_names.h"
 #include "components/prefs/pref_service.h"
@@ -519,29 +520,32 @@ void KeyringController::AddImportedAccount(
     std::move(callback).Run(false, "");
     return;
   }
-  if (!default_keyring_) {
+
+  const std::string address =
+      AddImportedAccountForDefaultKeyring(account_name, private_key);
+
+  std::move(callback).Run(!address.empty(), address);
+}
+
+void KeyringController::AddImportedAccountByJson(
+    const std::string& account_name,
+    const std::string& password,
+    const std::string& json,
+    AddImportedAccountCallback callback) {
+  if (account_name.empty() || password.empty() || json.empty() || !encryptor_) {
+    std::move(callback).Run(false, "");
+    return;
+  }
+  std::unique_ptr<HDKey> hd_key = HDKey::GenerateFromV3UTC(password, json);
+  if (!hd_key) {
     std::move(callback).Run(false, "");
     return;
   }
 
-  const std::string address = default_keyring_->AddImportedAccount(private_key);
-  if (address.empty()) {
-    std::move(callback).Run(false, "");
-    return;
-  }
-  std::vector<uint8_t> encrypted_private_key;
-  if (!encryptor_->Encrypt(private_key,
-                           GetOrCreateNonceForKeyring(kDefaultKeyringId),
-                           &encrypted_private_key)) {
-    std::move(callback).Run(false, "");
-    return;
-  }
-  ImportedAccountInfo info = {account_name, address,
-                              base::Base64Encode(encrypted_private_key)};
-  SetImportedAccountForKeyring(prefs_, info, kDefaultKeyringId);
+  const std::string address =
+      AddImportedAccountForDefaultKeyring(account_name, hd_key->private_key());
 
-  NotifyAccountsChanged();
-  std::move(callback).Run(true, address);
+  std::move(callback).Run(!address.empty(), address);
 }
 
 void KeyringController::GetPrivateKeyForImportedAccount(
@@ -616,6 +620,32 @@ void KeyringController::AddAccountForDefaultKeyring(
   CHECK(accounts_num);
   SetAccountNameForKeyring(prefs_, GetAccountPathByIndex(accounts_num - 1),
                            account_name, kDefaultKeyringId);
+}
+
+std::string KeyringController::AddImportedAccountForDefaultKeyring(
+    const std::string& account_name,
+    const std::vector<uint8_t>& private_key) {
+  if (!default_keyring_) {
+    return std::string();
+  }
+
+  const std::string address = default_keyring_->AddImportedAccount(private_key);
+  if (address.empty()) {
+    return std::string();
+  }
+  std::vector<uint8_t> encrypted_private_key;
+  if (!encryptor_->Encrypt(private_key,
+                           GetOrCreateNonceForKeyring(kDefaultKeyringId),
+                           &encrypted_private_key)) {
+    return std::string();
+  }
+  ImportedAccountInfo info = {account_name, address,
+                              base::Base64Encode(encrypted_private_key)};
+  SetImportedAccountForKeyring(prefs_, info, kDefaultKeyringId);
+
+  NotifyAccountsChanged();
+
+  return address;
 }
 
 size_t KeyringController::GetAccountMetasNumberForKeyring(
