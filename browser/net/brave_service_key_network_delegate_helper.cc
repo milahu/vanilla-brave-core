@@ -21,8 +21,7 @@ int OnBeforeStartTransaction_BraveServiceKey(
     const ResponseCallback& next_callback,
     std::shared_ptr<BraveRequestInfo> ctx) {
   const std::vector<std::string> whitelisted_domains = {
-      kExtensionUpdaterDomain, GURL(UPDATER_DEV_ENDPOINT).host(),
-      GURL(UPDATER_PROD_ENDPOINT).host()};
+      kExtensionUpdaterDomain};
 
   const GURL url = ctx->request_url;
 

@@ -29,6 +29,8 @@
 #include "base/version.h"
 #include "brave/components/brave_component_updater/browser/features.h"
 #include "brave/components/brave_component_updater/browser/switches.h"
+#include "brave/common/brave_features.h"
+#include "brave/common/brave_switches.h"
 #include "brave/components/greaselion/browser/greaselion_download_service.h"
 #include "brave/components/version_info//version_info.h"
 #include "chrome/browser/extensions/extension_service.h"
