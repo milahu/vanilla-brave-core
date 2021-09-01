@@ -13,9 +13,6 @@
   IsEnabled(network::mojom::WebClientHintsType type) const;              \
   void SetIsEnabled_Unused(network::mojom::WebClientHintsType type,      \
                            bool should_send);                            \
-  void SetIsEnabled_Unused(                                              \
-      const GURL& url, const net::HttpResponseHeaders* response_headers, \
-      network::mojom::WebClientHintsType type, bool should_send);        \
   bool IsEnabled_Unused
 
 #include "../../../../../../../third_party/blink/public/common/client_hints/enabled_client_hints.h"
