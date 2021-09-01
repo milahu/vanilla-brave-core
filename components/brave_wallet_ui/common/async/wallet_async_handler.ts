@@ -20,7 +20,8 @@ import {
   WalletState,
   WalletPanelState,
   AssetPriceTimeframe,
-  SendTransactionParam
+  SendTransactionParam,
+  TransactionInfo
 } from '../../constants/types'
 import { AssetOptions } from '../../options/asset-options'
 import { GetNetworkInfo } from '../../utils/network-utils'
@@ -235,18 +236,34 @@ handler.on(WalletActions.sendTransaction.getType(), async (store, payload: SendT
     console.log('Sending unapproved transaction failed, txData: ', txData, ', from: ', payload.from)
     return
   }
-  const approveResult = await apiProxy.ethTxController.approveTransaction(addResult.txMetaId)
-  console.log('approveResult: ', approveResult)
 
   await refreshWalletInfo(store)
 })
 
 handler.on(WalletActions.newUnapprovedTxAdded.getType(), async (store, payload: NewUnapprovedTxAdded) => {
-  console.log('new unapproved tx added: ', payload.txInfo)
+  //TODO
+  //store.dispatch(PanelActions.showApproveTransaction({ tabId, origin }))
+  console.log('new unapproved tx added from wallet_async_handler: ', payload.txInfo)
 })
 
 handler.on(WalletActions.transactionStatusChanged.getType(), async (store, payload: TransactionStatusChanged) => {
   console.log('tx status changed: ', payload.txInfo)
+})
+
+handler.on(WalletActions.approveTransaction.getType(), async (store, txInfo: TransactionInfo) => {
+  console.log('approveTransaction!')
+  const apiProxy = await getAPIProxy()
+  const approveResult = await apiProxy.ethTxController.approveTransaction(txInfo.id)
+  console.log('approveResult: ', approveResult)
+  await refreshWalletInfo(store)
+})
+
+handler.on(WalletActions.rejectTransaction.getType(), async (store, txInfo: TransactionInfo) => {
+  console.log('rejectTransaction!')
+  const apiProxy = await getAPIProxy()
+  const approveResult = await apiProxy.ethTxController.rejectTransaction(txInfo.id)
+  console.log('approveResult: ', approveResult)
+  await refreshWalletInfo(store)
 })
 
 export default handler.middleware

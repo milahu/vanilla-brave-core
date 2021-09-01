@@ -83,6 +83,7 @@ function Container (props: Props) {
     accounts,
     selectedAccount,
     selectedNetwork,
+    selectedPendingTransaction,
     isWalletLocked,
     favoriteApps,
     hasIncorrectPassword,
@@ -98,7 +99,6 @@ function Container (props: Props) {
     selectedPanel,
     showSignTransaction,
     showAllowSpendERC20Token,
-    showConfirmTransaction,
     networkPayload
   } = props.panel
 
@@ -318,11 +318,11 @@ function Container (props: Props) {
   }
 
   const onRejectTransaction = () => {
-    // Logic here to Reject a Transaction
+    props.walletActions.rejectTransaction(selectedPendingTransaction)
   }
 
   const onConfirmTransaction = () => {
-    // Logic here to Confirm a Transaction
+    props.walletActions.approveTransaction(selectedPendingTransaction)
   }
 
   const onOpenSettings = () => {
@@ -407,7 +407,32 @@ function Container (props: Props) {
     )
   }
 
-  if (showConfirmTransaction) {
+  if (selectedPanel === 'approveTransaction') {
+    // Example of a Confirm Transaction Payload to be passed to the
+    // Confirm Transaction Panel
+    const transactionPayloadExample = {
+      transactionAmount: '68000000000000000000',
+      transactionGas: '7548000000000000',
+      toAddress: selectedPendingTransaction.txData.baseData.to,
+      erc20Token: {
+        contractAddress: '0x0d8775f648430679a709e98d2b0cb6250d2887ef',
+        name: 'Basic Attention Token',
+        isErc20: true,
+        isErc721: false,
+        symbol: 'BAT',
+        decimals: 18,
+        icon: ''
+      },
+      tokenPrice: '0.35',
+      ethPrice: '3058.35',
+      transactionData: {
+        functionName: 'Atomic Match_',
+        parameters: 'Parameters: [ {"type": "uint256"}, {"type": "address[]"}, {"type": "address"}, {"type": "uint256"} ]',
+        hexData: '0xab834bab0000000000000000000000007be8076f4ea4a4ad08075c2508e481d6c946d12b00000000000000000000000073a29a1da97149722eb09c526e4ead698895bdc',
+        hexSize: '228'
+      }
+    }
+
     return (
       <PanelWrapper isLonger={true}>
         <SignContainer>

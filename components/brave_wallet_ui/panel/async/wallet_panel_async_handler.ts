@@ -50,6 +50,9 @@ handler.on(WalletActions.initialize.getType(), async (store) => {
     const origin = url.searchParams.get('origin') || ''
     store.dispatch(PanelActions.showConnectToSite({ tabId, accounts, origin }))
     return
+  } else if (url.hash === '#approveTransaction') {
+    store.dispatch(PanelActions.showApproveTransaction())
+    return
   }
   if (url.hash === '#addEthereumChain') {
     const tabId = Number(url.searchParams.get('tabId')) || -1
@@ -100,6 +103,12 @@ handler.on(PanelActions.addEthereumChain.getType(), async (store, payload: Ether
   apiProxy.showUI()
 })
 
+handler.on(PanelActions.showApproveTransaction.getType(), async (store) => {
+  store.dispatch(PanelActions.navigateTo('approveTransaction'))
+  const apiProxy = await getAPIProxy()
+  apiProxy.showUI()
+})
+
 handler.on(PanelActions.addEthereumChainApproved.getType(), async (store, payload: EthereumChainPayload) => {
   const state = getPanelState(store)
   const apiProxy = await getAPIProxy()
@@ -114,6 +123,8 @@ handler.on(PanelActions.addEthereumChainCanceled.getType(), async (store, payloa
   apiProxy.closeUI()
 })
 
+=======
+>>>>>>> Stashed changes
 handler.on(PanelActions.setupWallet.getType(), async (store) => {
   chrome.tabs.create({ url: 'chrome://wallet' }, () => {
     if (chrome.runtime.lastError) {

@@ -95,3 +95,6 @@ void WalletPanelHandler::CancelConnectToSite(const std::string& origin,
 
   permissions::BraveEthereumPermissionContext::Cancel(contents);
 }
+
+void WalletPanelHandler::ApproveTransaction() {
+}

@@ -21,7 +21,6 @@ const defaultState: PanelState = {
   connectingAccounts: [],
   showSignTransaction: false,
   showAllowSpendERC20Token: false,
-  showConfirmTransaction: false,
   networkPayload: { chainId: '0x1', chainName: 'Ethereum Mainnet',
     rpcUrls: ['https://mainnet-infura.brave.com/'], blockExplorerUrls: [],
     iconUrls: [], symbol: '', name: '', decimals: 0 }
@@ -57,6 +56,13 @@ reducer.on(PanelActions.addEthereumChain, (state: any, payload: EthereumChainPay
     ...state,
     tabId: payload.tabId,
     networkPayload: payload.networkPayload
+  }
+})
+
+//TODO:Can be removed
+reducer.on(PanelActions.showApproveTransaction, (state: any) => {
+  return {
+    ...state,
   }
 })
 

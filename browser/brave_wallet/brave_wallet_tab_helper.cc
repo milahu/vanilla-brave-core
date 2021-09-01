@@ -111,7 +111,7 @@ GURL BraveWalletTabHelper::GetBubbleURL() {
   DCHECK(manager);
 
   GURL webui_url = GURL(kBraveUIWalletPanelURL);
-
+  //return GURL("chrome://wallet-panel.top-chrome/#approveTransaction");
   // General panel UI if no pending ethereum permission request.
   // Only check the first entry because it will not be grouped with other
   // types.

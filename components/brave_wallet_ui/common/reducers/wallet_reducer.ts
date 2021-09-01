@@ -19,6 +19,9 @@ import {
   AssetPriceTimeframe,
   EthereumChain
 } from '../../constants/types'
+import {
+  NewUnapprovedTxAdded
+} from '../constants/action_types'
 import { convertMojoTimeToJS } from '../../utils/mojo-time'
 import * as WalletActions from '../actions/wallet_actions'
 import { InitializedPayloadType } from '../constants/action_types'
@@ -45,9 +48,10 @@ const defaultState: WalletState = {
   accounts: [],
   userVisibleTokens: [],
   userVisibleTokensInfo: [],
-  transactions: [],
+  pendingTransactions: [],
   fullTokenList: [],
   portfolioPriceHistory: [],
+  selectedPendingTransaction: undefined,
   isFetchingPortfolioPriceHistory: true,
   selectedPortfolioTimeline: AssetPriceTimeframe.OneDay,
   networkList: []
@@ -238,6 +242,22 @@ reducer.on(WalletActions.portfolioTimelineUpdated, (state: any, payload: AssetPr
     isFetchingPortfolioPriceHistory: true,
     selectedPortfolioTimeline: payload
   }
+})
+
+reducer.on(WalletActions.newUnapprovedTxAdded, (state: any, payload: NewUnapprovedTxAdded) => {
+  const newState = {
+    ...state,
+    pendingTransactions: [
+      ...state.pendingTransactions,
+      payload.txInfo
+    ]
+  }
+
+  if (state.pendingTransactions.length == 0) {
+    newState.selectedPendingTransaction = payload.txInfo
+  }
+
+  return newState
 })
 
 export default reducer

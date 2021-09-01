@@ -63,6 +63,8 @@ interface PanelHandler {
 
   ConnectToSite(array<string> accounts, string origin, int32 tab_id);
   CancelConnectToSite(string origin, int32 tab_id);
+
+  ApproveTransaction();
 };
 
 // Browser-side handler for requests from WebUI page.

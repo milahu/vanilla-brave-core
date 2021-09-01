@@ -43,6 +43,7 @@ class WalletPanelHandler : public brave_wallet::mojom::PanelHandler {
                      const std::string& origin,
                      int32_t tab_id) override;
   void CancelConnectToSite(const std::string& origin, int32_t tab_id) override;
+  void ApproveTransaction() override;
 
  private:
   mojo::Receiver<brave_wallet::mojom::PanelHandler> receiver_;
