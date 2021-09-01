@@ -6,12 +6,12 @@
 #ifndef BRAVE_COMPONENTS_BRAVE_ADS_BROWSER_NOTIFICATION_HELPER_WIN_H_
 #define BRAVE_COMPONENTS_BRAVE_ADS_BROWSER_NOTIFICATION_HELPER_WIN_H_
 
+#include "brave/components/brave_ads/browser/notification_helper.h"
+
 #include <windows.ui.notifications.h>
 #include <wrl/event.h>
 
 #include "base/memory/weak_ptr.h"
-
-#include "brave/components/brave_ads/browser/notification_helper.h"
 
 namespace brave_ads {
 
@@ -30,29 +30,19 @@ class NotificationHelperWin
   NotificationHelperWin();
   ~NotificationHelperWin() override;
 
-  bool IsFocusAssistEnabled() const;
-
   bool IsNotificationsEnabled();
 
-  std::wstring GetAppId() const;
-
   HRESULT InitializeToastNotifier();
-
-  template <unsigned int size, typename T>
-  HRESULT CreateActivationFactory(wchar_t const (&class_name)[size],
-                                  T** object) const;
 
   Microsoft::WRL::ComPtr<ABI::Windows::UI::Notifications::IToastNotifier>
       notifier_;
 
-  // NotificationHelper impl
-  bool ShouldShowNotifications() override;
-
+  // NotificationHelper:
   bool CanShowNativeNotifications() override;
 
-  bool ShowMyFirstAdNotification() override;
-
   bool CanShowBackgroundNotifications() const override;
+
+  bool ShowMyFirstAdNotification() override;
 };
 
 }  // namespace brave_ads
