@@ -1987,7 +1987,7 @@ bool AdsServiceImpl::ShouldShowNotifications() {
     return false;
   }
 
-  if (!NotificationHelper::GetInstance()->ShouldShowNotifications()) {
+  if (!NotificationHelper::GetInstance()->CanShowNativeNotifications()) {
     return ShouldShowCustomAdNotifications();
   }
 
