@@ -244,6 +244,7 @@ test("brave_unit_tests") {
     "//components/version_info",
     "//content/public/common",
     "//content/test:test_support",
+    "//crypto:crypto_unittests",
     "//extensions/common:common_constants",
     "//google_apis/gcm",
     "//google_apis/gcm:test_support",

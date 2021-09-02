@@ -16,6 +16,7 @@ const getTestsToRun = (config, suite) => {
     } else {
       testsToRun.push('bin/run_brave_public_test_apk')
     }
+    testsToRun.push('crypto_unittests')
   }
   return testsToRun
 }
